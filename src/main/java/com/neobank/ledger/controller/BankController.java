@@ -6,6 +6,7 @@ import com.neobank.ledger.exception.InvalidTransactionException;
 import com.neobank.ledger.service.AccountService;
 import com.neobank.ledger.service.BankTransactionService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -25,14 +26,14 @@ public class BankController {
     @PostMapping(value="/accounts",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public AccountDTO createAccount(@RequestBody AccountDTO account){
+    public AccountDTO createAccount(@Valid @RequestBody AccountDTO account){
         return accountService.createAccount(account);
     }
 
     @PostMapping(value="/transactions",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public BankTransactionDTO createBankTransaction(@RequestBody  BankTransactionDTO bankTransaction){
+    public BankTransactionDTO createBankTransaction(@Valid @RequestBody BankTransactionDTO bankTransaction){
             return bankTransactionService.createTransaction(bankTransaction);
     }
 

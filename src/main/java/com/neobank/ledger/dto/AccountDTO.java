@@ -1,8 +1,10 @@
 package com.neobank.ledger.dto;
 
+import jakarta.validation.constraints.NotNull;
+
 import java.math.BigDecimal;
 
 public record AccountDTO(
-            String alias,
+            @NotNull(message="Alias must be not null" )String alias,
             BigDecimal balance
 ){}

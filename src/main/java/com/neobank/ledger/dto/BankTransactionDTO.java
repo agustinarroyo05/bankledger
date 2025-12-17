@@ -1,12 +1,14 @@
 package com.neobank.ledger.dto;
 
+import jakarta.validation.constraints.NotNull;
+
 import java.math.BigDecimal;
 import java.time.Instant;
 
 public record BankTransactionDTO(
-        Long fromAccount,
-        Long toAccount,
-        BigDecimal amount,
+        @NotNull(message = "From account must be not null") Long fromAccount,
+        @NotNull(message = "To account must be not null") Long toAccount,
+        @NotNull(message = "Amount must not be null") BigDecimal amount,
         Instant createdAt
 ){
     public BankTransactionDTO(BankTransactionDTO dto, Instant instant){

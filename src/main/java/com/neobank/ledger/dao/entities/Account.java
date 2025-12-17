@@ -1,7 +1,14 @@
 package com.neobank.ledger.dao.entities;
 
 import com.neobank.ledger.exception.InvalidTransactionException;
-import jakarta.persistence.*;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,6 +25,7 @@ public class Account {
     private Long id;
     @Version
     private Long version;
+    @Column(nullable = false, unique = true)
     private String alias;
     private BigDecimal balance;
 
