@@ -17,9 +17,10 @@ How to run BankLedger
 
 Open a terminal in project root directory and run
 >docker compose  up -d
+
 >mvn spring-boot:run
 
-Now you can call this three apis:
+Now you can call these three apis:
 
 POST localhost:8080/accounts 
 POST localhost:8080/transactions
