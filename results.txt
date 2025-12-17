@@ -1,0 +1,30 @@
+
+docker run -d \
+  --name postgres_local \
+  -e POSTGRES_DB=bankledger \
+  -e POSTGRES_USER=bank \
+  -e POSTGRES_PASSWORD=bank\
+  -p 5432:5432 \
+  -v pgdata:/var/lib/postgresql/data \
+  postgres:15
+  
+        Account fromAccount =  entityManager.find(Account.class, fromAccountId, LockModeType.OPTIMISTIC);
+        Account toAccount = entityManager.find(Account.class, toAccountId, LockModeType.OPTIMISTIC);
+        
+    Serializable
+    1) 403 req 149 reg
+    2) 877 req 324 reg
+    3) 919 req 326 reg
+    4) 1079 req 394 reg
+    
+    Read commited + pesimistic write
+    1) req 29 25 reg
+    2) req 53 49 reg
+    3) req 103 97 reg
+    4) req 57 53 reg
+    
+    OPTIMISTIC
+    1) 484 req reg 202
+    2) 984 req reg 385
+    2) 1013 req reg 403
+    3) 1013 req reg 441
