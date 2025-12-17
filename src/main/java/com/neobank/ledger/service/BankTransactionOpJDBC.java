@@ -29,23 +29,23 @@ public class BankTransactionOpJDBC {
 
     @Transactional(isolation = Isolation.READ_COMMITTED)
     public BankTransactionDTO createTransaction(BankTransactionDTO bankTransactionDTO) {
-        // 1. Leer ambas cuentas (SIN LOCK)
+
         Account from = readAccount(bankTransactionDTO.fromAccount());
         Account to   = readAccount(bankTransactionDTO.toAccount());
 
-        // 2. Validación de negocio
+
         if (from.getBalance().compareTo(bankTransactionDTO.amount()) < 0) {
             throw new IllegalStateException("Insufficient funds");
         }
 
-        // 3. Update cuenta origen (optimistic)
+
         updateBalanceOptimistic(
                 from.getId(),
                 from.getBalance().subtract(bankTransactionDTO.amount()),
                 from.getVersion()
         );
 
-        // 4. Update cuenta destino (optimistic)
+
         updateBalanceOptimistic(
                 to.getId(),
                 to.getBalance().add(bankTransactionDTO.amount()),
