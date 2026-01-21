@@ -43,12 +43,12 @@ public class BankTransactionService {
         BankTransactionDTO result;
 
         try {
-            if (bankTransactionDTO.fromAccount().equals(bankTransactionDTO.toAccount()))
+            if (bankTransactionDTO.fromAccountAlias().equals(bankTransactionDTO.toAccountAlias()))
                 throw new InvalidTransactionException("From Account is the same as toAccount");
 
-            Account fromAccount = accountRepository.findById(bankTransactionDTO.fromAccount()).
+            Account fromAccount = accountRepository.findByAlias(bankTransactionDTO.fromAccountAlias()).
                     orElseThrow(() -> new InvalidTransactionException("Invalid From account"));
-            Account toAccount = accountRepository.findById(bankTransactionDTO.toAccount()).
+            Account toAccount = accountRepository.findByAlias(bankTransactionDTO.toAccountAlias()).
                     orElseThrow(() -> new InvalidTransactionException("Invalid To account"));
 
             fromAccount.debit(bankTransactionDTO.amount());
@@ -72,7 +72,13 @@ public class BankTransactionService {
     public List<BankTransactionDTO> getTransactions(Long fromAccountId){
         return bankTransactionRepository.findByFromAccountId(fromAccountId)
                 .stream()
-                .map(bt -> bankTransactionMapper.toBankTransactionDTO(bt))
+                .map(bankTransactionMapper::toBankTransactionDTO)
+                .collect(Collectors.toList());
+    }
+    public List<BankTransactionDTO> getTransactions(){
+        return bankTransactionRepository.findAll()
+                .stream()
+                .map(bankTransactionMapper::toBankTransactionDTO)
                 .collect(Collectors.toList());
     }
 }

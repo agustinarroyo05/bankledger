@@ -53,21 +53,23 @@ class BankTransactionServiceTest {
     void createTransaction_ok() {
 
         BankTransactionDTO dto =
-                new BankTransactionDTO(1L, 2L, BigDecimal.TEN, null);
+                new BankTransactionDTO(1L, 2L,"alias1", "alias2", BigDecimal.TEN, null);
 
         Account fromAccount = new Account();
         fromAccount.setId(1L);
+        fromAccount.setAlias("alias1");
         fromAccount.setBalance(BigDecimal.valueOf(100));
         Account toAccount   = new Account();
         toAccount.setId(2L);
+        toAccount.setAlias("alias2");
         toAccount.setBalance(BigDecimal.valueOf(50));
 
         BankTransaction entity = new BankTransaction();
         Instant now = Instant.now();
         entity.setCreatedAt(now);
 
-        when(accountRepository.findById(1L)).thenReturn(Optional.of(fromAccount));
-        when(accountRepository.findById(2L)).thenReturn(Optional.of(toAccount));
+        when(accountRepository.findByAlias("alias1")).thenReturn(Optional.of(fromAccount));
+        when(accountRepository.findByAlias("alias2")).thenReturn(Optional.of(toAccount));
         when(bankTransactionMapper.toBankTransaction(dto, fromAccount, toAccount))
                 .thenReturn(entity);
 
@@ -84,7 +86,7 @@ class BankTransactionServiceTest {
     void createTransaction_sameAccount_throwsException() {
 
         BankTransactionDTO dto =
-                new BankTransactionDTO(1L, 1L, BigDecimal.TEN, null);
+                new BankTransactionDTO(1L, 1L, "alias1", "alias1",  BigDecimal.TEN, null);
 
         InvalidTransactionException ex =
                 assertThrows(InvalidTransactionException.class,
@@ -100,9 +102,9 @@ class BankTransactionServiceTest {
     void createTransaction_invalidFromAccount() {
 
         BankTransactionDTO dto =
-                new BankTransactionDTO(1L, 2L, BigDecimal.TEN, null);
+                new BankTransactionDTO(1L, 2L, "alias1", "alias2", BigDecimal.TEN, null);
 
-        when(accountRepository.findById(1L)).thenReturn(Optional.empty());
+        when(accountRepository.findByAlias("alias1")).thenReturn(Optional.empty());
 
         InvalidTransactionException ex =
                 assertThrows(InvalidTransactionException.class,
@@ -115,15 +117,16 @@ class BankTransactionServiceTest {
     void createTransaction_invalidToAccount() {
 
         BankTransactionDTO dto =
-                new BankTransactionDTO(1L, 2L, BigDecimal.TEN, null);
+                new BankTransactionDTO(1L, 2L, "alias1", "alias2", BigDecimal.TEN, null);
 
         Account account = new Account();
         account.setId(1L);
+        account.setAlias("alias1");
         account.setBalance(BigDecimal.TEN);
 
-        when(accountRepository.findById(1L))
+        when(accountRepository.findByAlias("alias1"))
                 .thenReturn(Optional.of(account));
-        when(accountRepository.findById(2L))
+        when(accountRepository.findByAlias("alias2"))
                 .thenReturn(Optional.empty());
 
         InvalidTransactionException ex =
@@ -136,17 +139,19 @@ class BankTransactionServiceTest {
     void createTransaction_optimisticLockException() {
 
         BankTransactionDTO dto =
-                new BankTransactionDTO(1L, 2L, BigDecimal.TEN, null);
+                new BankTransactionDTO(1L, 2L,"alias1", "alias2", BigDecimal.TEN, null);
 
         Account fromAccount = new Account();
         fromAccount.setId(1L);
+        fromAccount.setAlias("alias1");
         fromAccount.setBalance(BigDecimal.valueOf(100));
         Account toAccount  = new Account();
         toAccount.setId(2L);
+        toAccount.setAlias("alias2");
         toAccount.setBalance(BigDecimal.valueOf(50));
 
-        when(accountRepository.findById(1L)).thenReturn(Optional.of(fromAccount));
-        when(accountRepository.findById(2L)).thenReturn(Optional.of(toAccount));
+        when(accountRepository.findByAlias("alias1")).thenReturn(Optional.of(fromAccount));
+        when(accountRepository.findByAlias("alias2")).thenReturn(Optional.of(toAccount));
         when(bankTransactionRepository.save(any()))
                 .thenThrow(new OptimisticLockException());
 
@@ -167,9 +172,9 @@ class BankTransactionServiceTest {
                 .thenReturn(List.of(bt1, bt2));
 
         when(bankTransactionMapper.toBankTransactionDTO(bt1))
-                .thenReturn(new BankTransactionDTO(1L, 2L, BigDecimal.TEN, null));
+                .thenReturn(new BankTransactionDTO(1L, 2L, "alias1", "alias2", BigDecimal.TEN, null));
         when(bankTransactionMapper.toBankTransactionDTO(bt2))
-                .thenReturn(new BankTransactionDTO(1L, 3L, BigDecimal.ONE, null));
+                .thenReturn(new BankTransactionDTO(1L, 3L, "alias1", "alias2", BigDecimal.ONE, null));
 
         List<BankTransactionDTO> result = bankTransactionService.getTransactions(1L);
 

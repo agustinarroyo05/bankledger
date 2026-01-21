@@ -4,8 +4,10 @@ import com.neobank.ledger.dao.entities.Account;
 import com.neobank.ledger.dao.repositories.AccountRepository;
 import com.neobank.ledger.dto.AccountDTO;
 import com.neobank.ledger.mappers.AccountMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class AccountService {
@@ -23,6 +25,16 @@ public class AccountService {
         Account account = accountMapper.toAccount(accountDto);
         accountRepository.save(account);
         return accountDto;
+    }
+    public List<AccountDTO> listAccounts(){
+        List<Account> accounts = accountRepository.findAll();
+        List<AccountDTO> accountsDTO = accountMapper.toAccountDTO(accounts);
+        return accountsDTO;
+    }
+
+    @Transactional
+    public Long deleteAccount(String alias){
+        return accountRepository.deleteByAlias(alias);
     }
 
 }

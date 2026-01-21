@@ -14,8 +14,10 @@ public interface BankTransactionMapper {
     @Mapping(target = "toAccount", source = "toAccount")
     BankTransaction toBankTransaction(BankTransactionDTO bankTransactionDTO, Account fromAccount, Account toAccount);
 
-    @Mapping(target = "fromAccount", source = "fromAccount.id")
-    @Mapping(target = "toAccount", source = "toAccount.id")
+    @Mapping(target = "fromAccount", ignore = true)
+    @Mapping(target = "toAccount", ignore = true)
+    @Mapping(target = "fromAccountAlias", source = "fromAccount.alias")
+    @Mapping(target = "toAccountAlias", source = "toAccount.alias")
     BankTransactionDTO toBankTransactionDTO(BankTransaction bankTransaction);
 }
 

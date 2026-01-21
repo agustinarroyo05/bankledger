@@ -36,7 +36,7 @@ class AccountServiceTest {
     void createAccount_ok() {
         // given
         AccountDTO dto =
-                new AccountDTO("alias-test", new BigDecimal("1000"));
+                new AccountDTO(1L, "alias-test", new BigDecimal("1000"));
 
         Account account = new Account();
 
