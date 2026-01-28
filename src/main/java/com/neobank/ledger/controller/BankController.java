@@ -58,6 +58,7 @@ public class BankController {
         return bankTransactionService.getTransactions(accountId);
     }
     @GetMapping(value="/transactions", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasRole('premium')")
     public List<BankTransactionDTO> getTransactions(){
         return bankTransactionService.getTransactions();
     }
