@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.annotation.Isolation;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -67,6 +68,22 @@ public class BankTransactionService {
 
         return result;
 
+    }
+
+    @Transactional(isolation = Isolation.READ_COMMITTED)
+    public void deleteTransaction(Long id) {
+        BankTransaction bankTransaction = bankTransactionRepository.findById(id)
+                .orElseThrow(() -> new InvalidTransactionException("Transaction not found with id: " + id));
+
+        Account fromAccount = bankTransaction.getFromAccount();
+        Account toAccount = bankTransaction.getToAccount();
+        BigDecimal amount = bankTransaction.getAmount();
+
+        // Revert the transaction
+        fromAccount.credit(amount);
+        toAccount.debit(amount);
+
+        bankTransactionRepository.delete(bankTransaction);
     }
 
     public List<BankTransactionDTO> getTransactions(Long fromAccountId){

@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.time.Instant;
 
 public record BankTransactionDTO(
+        Long id,
         Long fromAccount,
         Long toAccount,
         @NotNull(message = "From account must be not null") String fromAccountAlias,
@@ -14,6 +15,6 @@ public record BankTransactionDTO(
         Instant createdAt
 ){
     public BankTransactionDTO(BankTransactionDTO dto, Instant instant){
-        this(dto.fromAccount, dto.toAccount, dto.fromAccountAlias(), dto.toAccountAlias, dto.amount, instant);
+        this(dto.id, dto.fromAccount, dto.toAccount, dto.fromAccountAlias(), dto.toAccountAlias, dto.amount, instant);
     }
 }

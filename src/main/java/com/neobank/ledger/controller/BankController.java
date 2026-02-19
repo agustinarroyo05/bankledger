@@ -63,6 +63,13 @@ public class BankController {
         return bankTransactionService.getTransactions();
     }
 
+    @DeleteMapping(value = "/transactions/{id}")
+    @PreAuthorize("hasRole('premium')")
+    public ResponseEntity<Void> deleteTransaction(@PathVariable Long id) {
+        bankTransactionService.deleteTransaction(id);
+        return ResponseEntity.noContent().build();
+    }
+
     @ExceptionHandler(InvalidTransactionException.class)
     public ResponseEntity<String> handleNotFound(
             InvalidTransactionException ex,
