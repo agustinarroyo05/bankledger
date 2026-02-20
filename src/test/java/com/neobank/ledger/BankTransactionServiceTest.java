@@ -53,7 +53,7 @@ class BankTransactionServiceTest {
     void createTransaction_ok() {
 
         BankTransactionDTO dto =
-                new BankTransactionDTO(1L, 2L,"alias1", "alias2", BigDecimal.TEN, null);
+                new BankTransactionDTO(null, 1L, 2L, "alias1", "alias2", BigDecimal.TEN, null);
 
         Account fromAccount = new Account();
         fromAccount.setId(1L);
@@ -86,7 +86,7 @@ class BankTransactionServiceTest {
     void createTransaction_sameAccount_throwsException() {
 
         BankTransactionDTO dto =
-                new BankTransactionDTO(1L, 1L, "alias1", "alias1",  BigDecimal.TEN, null);
+                new BankTransactionDTO(null, 1L, 1L, "alias1", "alias1",  BigDecimal.TEN, null);
 
         InvalidTransactionException ex =
                 assertThrows(InvalidTransactionException.class,
@@ -102,7 +102,7 @@ class BankTransactionServiceTest {
     void createTransaction_invalidFromAccount() {
 
         BankTransactionDTO dto =
-                new BankTransactionDTO(1L, 2L, "alias1", "alias2", BigDecimal.TEN, null);
+                new BankTransactionDTO(null, 1L, 2L, "alias1", "alias2", BigDecimal.TEN, null);
 
         when(accountRepository.findByAlias("alias1")).thenReturn(Optional.empty());
 
@@ -117,7 +117,7 @@ class BankTransactionServiceTest {
     void createTransaction_invalidToAccount() {
 
         BankTransactionDTO dto =
-                new BankTransactionDTO(1L, 2L, "alias1", "alias2", BigDecimal.TEN, null);
+                new BankTransactionDTO(null, 1L, 2L, "alias1", "alias2", BigDecimal.TEN, null);
 
         Account account = new Account();
         account.setId(1L);
@@ -139,7 +139,7 @@ class BankTransactionServiceTest {
     void createTransaction_optimisticLockException() {
 
         BankTransactionDTO dto =
-                new BankTransactionDTO(1L, 2L,"alias1", "alias2", BigDecimal.TEN, null);
+                new BankTransactionDTO(null, 1L, 2L, "alias1", "alias2", BigDecimal.TEN, null);
 
         Account fromAccount = new Account();
         fromAccount.setId(1L);
@@ -172,9 +172,9 @@ class BankTransactionServiceTest {
                 .thenReturn(List.of(bt1, bt2));
 
         when(bankTransactionMapper.toBankTransactionDTO(bt1))
-                .thenReturn(new BankTransactionDTO(1L, 2L, "alias1", "alias2", BigDecimal.TEN, null));
+                .thenReturn(new BankTransactionDTO(null, 1L, 2L, "alias1", "alias2", BigDecimal.TEN, null));
         when(bankTransactionMapper.toBankTransactionDTO(bt2))
-                .thenReturn(new BankTransactionDTO(1L, 3L, "alias1", "alias2", BigDecimal.ONE, null));
+                .thenReturn(new BankTransactionDTO(null, 1L, 3L, "alias1", "alias2", BigDecimal.ONE, null));
 
         List<BankTransactionDTO> result = bankTransactionService.getTransactions(1L);
 
